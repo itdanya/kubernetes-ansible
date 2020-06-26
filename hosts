@@ -1,0 +1,14 @@
+[control:vars]
+ansible_python_interpreter=/usr/bin/python3
+
+[master]
+node0-master ansible_host=84.201.174.236 ansible_user=cloud-user
+
+[workers]
+node1-worker1 ansible_host=84.201.131.95 ansible_user=cloud-user
+node2-worker2 ansible_host=84.201.134.140 ansible_user=cloud-user
+
+[all]
+node0-master ansible_host=84.201.174.236 ansible_user=cloud-user
+node1-worker1 ansible_host=84.201.131.95 ansible_user=cloud-user
+node2-worker2 ansible_host=84.201.134.140 ansible_user=cloud-user

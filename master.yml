@@ -1,0 +1,54 @@
+---
+
+- hosts: master
+  become: yes
+  gather_facts: no
+
+  tasks:
+    - name: install kubectl
+      dnf:
+        name: kubectl
+        state: present
+
+
+
+    - name: initialize the cluster
+      shell: kubeadm init --pod-network-cidr=10.244.0.0/16 >> cluster_initialized.txt
+      args:
+        chdir: $HOME
+        creates: cluster_initialized.txt
+
+    - name: create .kube directory
+      become: yes
+      file:
+        path: $HOME/.kube
+        state: directory
+        mode: '0755'
+
+    - name: copy admin.conf to user's kube config
+      copy:
+        src: /etc/kubernetes/admin.conf
+        dest: /home/cloud-user/.kube/config
+        remote_src: yes
+
+
+    - name: install Pod network
+      become: yes
+      shell: kubectl apply -f https://github.com/coreos/flannel/blob/master/Documentation/kube-flannel.yml?raw=true >> pod_network_setup.txt
+      args:
+        chdir: $HOME
+        creates: pod_network_setup.txt
+
+    - name: install wget
+      dnf:
+        name: wget
+        state: present
+
+    - name: install helm
+      shell: wget https://get.helm.sh/helm-v3.2.4-linux-amd64.tar.gz
+
+    - name: unpack helm
+      shell: tar xzvf helm-v3.2.4-linux-amd64.tar.gz
+
+    - name: mv helm
+      shell: mv linux-amd64/helm /usr/local/bin/helm

@@ -1,0 +1,30 @@
+---
+
+- hosts: all
+  become: yes
+  gather_facts: no
+
+  tasks:
+
+    - name: add Kubernetes repository
+      yum_repository:
+        name: Kubernetes
+        description: Kubernetes YUM repository
+        baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+        gpgkey: https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+        gpgcheck: yes
+
+    - name: add docker repo
+      command: dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
+
+    - name: disable SELinux
+      command: setenforce 0
+
+    - name: install docker-ce
+      command: dnf install -y docker-ce kubelet kubeadm --nobest
+
+    - name: start docker
+      service: name=docker state=started enabled=true
+
+    - name: start kubelet
+      service: name=kubelet state=started enabled=true
