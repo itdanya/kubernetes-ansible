@@ -11,7 +11,7 @@
     - name: copy token to my tmp
       fetch:
         src: /home/cloud-user/token.sh
-        dest: /home/danya/skb/
+        dest: /tmp
 
 - hosts: workers
   become: yes
@@ -20,7 +20,7 @@
   tasks:
     - name: copy token to worker node use scp
       copy:
-        src: /home/danya/skb/node0-master/home/cloud-user/token.sh
+        src: /tmp/node0-master/home/cloud-user/token.sh
         dest: /home/cloud-user/
         mode: '0755'
 
