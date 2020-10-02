@@ -1,4 +1,4 @@
-# skb-kubernetes-ansible
+# kubernetes-ansible
 
 Разворачиваем kubernetes кластер 
 
